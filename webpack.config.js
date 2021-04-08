@@ -1,37 +1,39 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const htmlPlugin = new HtmlWebpackPlugin({
+  template: './public/index.html',
+  filename: './index.html'
+})
+
+const ruleJavascript = {
+  test: /\.(js|jsx)$/,
+  exclude: /node_modules/,
+  use: {
+    loader: 'babel-loader'
+  }
+}
+
+const ruleHtml = {
+  test: /\.html$/,
+  use: {
+    loader: 'html-loader'
+  }
+}
+
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'build.js',
+    filename: 'bundle.[contenthash].js',
+    clean: true
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx']
   },
   module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
-      },
-      {
-        test: /\.html$/,
-        use: {
-          loader: 'html-loader',
-        },
-      },
-    ],
+    rules: [ruleJavascript, ruleHtml]
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
-      filename: './index.html',
-    }),
-  ],
+  plugins: [htmlPlugin]
 }
